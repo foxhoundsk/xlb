@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         exit(-1);
     }
 
-    for (int i = 0; i < BUCKET_SIZE; i += 2) {
+    for (int i = 0; i < BUCKET_SIZE; i++) {
         ip[i] = atoi(argv[i + 2]);
         ip[i] = htonl(ip[i]);
     }
