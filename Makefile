@@ -8,13 +8,13 @@ KERN_PROG = lb_kern.o
 KERN_INC = -Ibpf/linux_header -Ibpf
 
 LIBBPF_DIR ?= libbpf/src
-USER_INC = -Ibpf -I$(LIBBPF_DIR)/build/usr/include
+USER_INC = -Ibpf -I$(LIBBPF_DIR)/build/usr/include/bpf
 OBJECT_LIBBPF = $(LIBBPF_DIR)/libbpf.a
 LDFLAGS ?= -L$(LIBBPF_DIR)
-LIBS = -l:libbpf.a -lelf
+LIBS = -l:libbpf.a -lelf -lz
 
 $(USER_PROG): user/xlb.c $(OBJECT_LIBBPF) 
-	$(CC) $(USER_INC) $(LDFLAGS) $(LIBS) -Wall -o $@ $<
+	$(CC) $(USER_INC) $(LDFLAGS) -Wall -o $@ $< $(LIBS)
 
 $(KERN_PROG): bpf/lb_kern.c
 	$(CLANG) \
@@ -27,6 +27,7 @@ $(KERN_PROG): bpf/lb_kern.c
 	    -Werror \
 		-O2 -emit-llvm -c -g -o ${@:.o=.ll} $<
 	$(LLC) -march=bpf -filetype=obj -o $@ ${@:.o=.ll}
+	# is -mcpu=probe necessary?
 
 $(OBJECT_LIBBPF):
 	@if [ ! -d $(LIBBPF_DIR) ]; then \

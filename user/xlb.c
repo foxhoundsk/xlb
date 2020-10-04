@@ -1,5 +1,5 @@
-#include <bpf/bpf.h>
-#include <bpf/libbpf.h>
+#include <bpf.h>
+#include <libbpf.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include <net/if.h>
