@@ -13,4 +13,4 @@ struct bpf_map_def SEC("maps") reals = {
 	.max_entries = BUCKET_SIZE,
 };
 
-#endif // _LB_CONSTS_H
+#endif // _LB_MAPS_H

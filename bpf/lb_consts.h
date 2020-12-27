@@ -1,7 +1,7 @@
 #ifndef _LB_CONSTS_H
 #define _LB_CONSTS_H
 
-/* eth protocol code in BE. then we dont need hton */
+/* ipv4 protocol code in BE. then we dont need hton */
 #define BE_ETH_P_IP 8
 
 #define HASH_SEED 0xcafebabe
