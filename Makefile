@@ -4,6 +4,8 @@ LLC ?= llc
 
 USER_PROG = xlb_user
 KERN_PROG = lb_kern.o
+PLAYGROUND_PROG = play.o
+PLAYGROUND_SRCS = bpf/play.c
 
 KERN_INC = -Ibpf/linux_header -Ibpf
 KERN_SRCS = bpf/lb_kern.c bpf/*.h
@@ -18,7 +20,8 @@ LIBBPF_SRCS = libbpf/src/*.c
 LDFLAGS ?= -L$(LIBBPF_DIR)
 LIBS = -l:libbpf.a -lelf -lz
 
-all: $(USER_PROG) $(KERN_PROG)
+all: $(USER_PROG) $(KERN_PROG) play
+play: $(PLAYGROUND_PROG)
 
 $(USER_PROG): $(USER_SRCS) $(OBJECT_LIBBPF) 
 	$(CC) $(USER_INC) $(LDFLAGS) -Wall -o $@ $< $(LIBS)
@@ -45,5 +48,10 @@ $(OBJECT_LIBBPF): $(LIBBPF_SRCS)
 		mkdir -p build; $(MAKE) install_headers DESTDIR=build OBJDIR=.; \
 	fi
 
+$(PLAYGROUND_PROG): $(PLAYGROUND_SRCS)
+	$(CLANG) -O2 -target bpf $(KERN_INC) -c bpf/play.c -o $@ -Wno-compare-distinct-pointer-types
+
 clean:
-	rm -f $(KERN_PROG) $(USER_PROG) *.ll *.o 
+	rm -f $(KERN_PROG) $(USER_PROG) *.ll *.o
+
+.PHONY: play
